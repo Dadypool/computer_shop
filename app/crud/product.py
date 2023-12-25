@@ -2,13 +2,13 @@ from sqlalchemy import select
 from pydantic import ValidationError
 
 from app.database import Session
-from app.models import Product
-from app.schemas import Productcreate
+from app.models import Product, ProductStatus
+from app.schemas import ProductCreate, ProductCategory
 
 
 def create_product(product: dict) -> bool:
     try:
-        product = Productcreate(**product)
+        product = ProductCreate(**product)
     except ValidationError:
         return False
 
@@ -28,13 +28,36 @@ def read_product_by_id(id: int) -> dict | None:
     if not product:
         return None
 
-    product = Productcreate.from_orm(product).__dict__
-    product['category'] = product['category'].value
+    product = ProductCreate.from_orm(product).__dict__
+    product["category"] = product["category"].value
     return product
 
 
-def read_product_by_category(category: str) -> list[dict]:
-    stmt = select(Product).where(Product.category == category)
+def read_product_by_category(category: ProductCategory) -> list[dict]:
     with Session() as db:
-        products = db.scalars(stmt).all()
-    return [Productcreate.from_orm(product).__dict__ for product in products]
+        products = db.execute(
+            select(Product.name, Product.price, Product.manufacturer)
+            .where(Product.status == ProductStatus.free)
+            .where(Product.category == category)
+        ).all()
+    return [ProductCategory.from_orm(product).__dict__ for product in products]
+
+
+def update_product_status(id: int, new_status: ProductStatus) -> bool:
+    with Session() as db:
+        product = db.get(Product, id)
+        if not product:
+            return False
+        product.status = new_status
+        db.commit()
+    return True
+
+
+def delete_product(id: int) -> bool:
+    with Session() as db:
+        product = db.get(Product, id)
+        if not product:
+            return False
+        db.delete(product)
+        db.commit()
+    return True
