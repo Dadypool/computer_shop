@@ -13,6 +13,8 @@ pydantic-settings = "^2.1.0"
 psycopg = "^3.1.16"
 psycopg-binary = "^3.1.16"
 
+[tool.poetry.group.bot.dependencies]
+
 
 [build-system]
 requires = ["poetry-core"]
