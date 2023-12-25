@@ -6,20 +6,24 @@ from sqlalchemy import ForeignKey, String, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 intpk = Annotated[int, mapped_column(primary_key=True)]
-created_at = Annotated[datetime.datetime, mapped_column(
+created_at = Annotated[
+    datetime.datetime,
+    mapped_column(
         server_default=text("TIMEZONE('utc', now())"),
-    )]
-updated_at = Annotated[datetime.datetime, mapped_column(
+    ),
+]
+updated_at = Annotated[
+    datetime.datetime,
+    mapped_column(
         server_default=text("TIMEZONE('utc', now())"),
         onupdate=datetime.datetime.utcnow,
-    )]
+    ),
+]
 str_256 = Annotated[str, 256]
 
 
 class Base(DeclarativeBase):
-    type_annotation_map = {
-        str_256: String(256)
-    }
+    type_annotation_map = {str_256: String(256)}
 
     repr_cols_num = 3
     repr_cols = tuple()
@@ -40,18 +44,18 @@ class Rights(enum.Enum):
 
 
 class Category(enum.Enum):
-    cpu = "processor"
-    gpu = "graphics card"
+    cpu = "cpu"
+    gpu = "gpu"
     ram = "ram"
     hdd = "hdd"
-    ps = "power supply"
+    ps = "ps"
     block = "block"
 
 
 class ProductStatus(enum.Enum):
-    created = "free"
-    shipped = "reserved"
-    delivered = "sold"
+    free = "free"
+    reserved = "reserved"
+    sold = "sold"
 
 
 class OrderStatus(enum.Enum):
@@ -87,11 +91,11 @@ class Product(Base):
 
     manufacturer: Mapped[str]
 
-    status: Mapped[ProductStatus] = mapped_column(default=ProductStatus.created)
+    status: Mapped[ProductStatus] = mapped_column(default=ProductStatus.free)
 
     order_id: Mapped[Optional[int]] = mapped_column(
         ForeignKey("order.id", ondelete="CASCADE")
-        )
+    )
 
     order: Mapped["Order"] = relationship(
         back_populates="products",
@@ -103,9 +107,7 @@ class Order(Base):
 
     id: Mapped[intpk]
 
-    user_id: Mapped[int] = mapped_column(
-        ForeignKey("user.id", ondelete="CASCADE")
-        )
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"))
 
     status: Mapped[OrderStatus]
 
