@@ -1,9 +1,9 @@
 from sqlalchemy import select
 from pydantic import ValidationError
 
-from app.database import Session
-from app.models import Product, ProductStatus
-from app.schemas import ProductSchema, ProductCategory
+from app.database.sqlalchemy import Session
+from app.database.models import Product, ProductStatus
+from app.database.schemas import ProductSchema, ProductCategory
 
 
 def create_product(product: dict) -> bool:

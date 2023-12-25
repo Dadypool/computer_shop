@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, ConfigDict
 
-from app.models import Rights, Category
+from app.database.models import Rights, Category
 
 price_constr = Field(gt=0)
 str_constr = Field(min_length=2, max_length=30)

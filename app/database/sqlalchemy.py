@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.config import settings
-from app.models import Base
+from app.database.dbconfig import settings
+from app.database.models import Base
 
 sync_engine = create_engine(
     url=settings.DATABASE_URL_psycopg,

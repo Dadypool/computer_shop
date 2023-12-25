@@ -1,12 +1,12 @@
-from app.crud.user import create_user, read_user
-from app.crud.product import (
+from app.database.crud.user import create_user, read_user
+from app.database.crud.product import (
     create_product,
     read_product_by_id,
     read_product_by_category,
     update_product_status,
     update_product_price
 )
-from app.database import create_tables
+from app.database.sqlalchemy import create_tables
 
 
 def _create_tables():
@@ -81,4 +81,4 @@ def _update_product_price():
 
 
 if __name__ == "__main__":
-    _update_product_price()
+    _read_product()

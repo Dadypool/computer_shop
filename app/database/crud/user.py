@@ -1,9 +1,9 @@
 from sqlalchemy import select
 from pydantic import ValidationError
 
-from app.database import Session
-from app.models import User
-from app.schemas import UserSchema
+from app.database.sqlalchemy import Session
+from app.database.models import User
+from app.database.schemas import UserSchema
 
 
 def create_user(user: dict) -> bool:
