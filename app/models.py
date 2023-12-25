@@ -48,7 +48,13 @@ class Category(enum.Enum):
     block = "block"
 
 
-class Status(enum.Enum):
+class ProductStatus(enum.Enum):
+    created = "free"
+    shipped = "reserved"
+    delivered = "sold"
+
+
+class OrderStatus(enum.Enum):
     created = "created"
     shipped = "shipped"
     delivered = "delivered"
@@ -61,7 +67,7 @@ class User(Base):
 
     name: Mapped[str]
 
-    rights: Mapped[Rights]
+    rights: Mapped[Rights] = mapped_column(default=Rights.user)
 
     orders: Mapped[list["Order"]] = relationship(
         back_populates="user",
@@ -81,6 +87,8 @@ class Product(Base):
 
     manufacturer: Mapped[str]
 
+    status: Mapped[ProductStatus] = mapped_column(default=ProductStatus.created)
+
     order_id: Mapped[Optional[int]] = mapped_column(
         ForeignKey("order.id", ondelete="CASCADE")
         )
@@ -99,7 +107,7 @@ class Order(Base):
         ForeignKey("user.id", ondelete="CASCADE")
         )
 
-    status: Mapped[Status]
+    status: Mapped[OrderStatus]
 
     created_at: Mapped[created_at]
 
