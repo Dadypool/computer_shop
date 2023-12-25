@@ -16,8 +16,14 @@ class UserSchema(MyBaseModel):
     rights: Rights = Rights.user
 
 
-class Productcreate(MyBaseModel):
+class ProductCreate(MyBaseModel):
     name: str = str_constr
     price: int = price_constr
     category: Category
+    manufacturer: str = str_constr
+
+
+class ProductCategory(MyBaseModel):
+    name: str = str_constr
+    price: int = price_constr
     manufacturer: str = str_constr
