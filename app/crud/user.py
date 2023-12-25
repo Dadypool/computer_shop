@@ -30,3 +30,13 @@ def read_user(id: int) -> dict | None:
     user = UserSchema.from_orm(user).__dict__
     user["rights"] = user["rights"].value
     return user
+
+
+def delete_user(id: int) -> bool:
+    with Session() as db:
+        user = db.get(User, id)
+        if not user:
+            return False
+        db.delete(user)
+        db.commit()
+    return True
