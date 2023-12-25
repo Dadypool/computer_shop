@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "computer-shop"
+version = "0.1.0"
+description = ""
+authors = ["Dadypool", "wequalwo"]
+readme = "README.md"
+
+[tool.poetry.group.db.dependencies]
+python = "^3.11"
+SQLAlchemy = "^2.0.23"
+pydantic = "^2.5.3"
+pydantic-settings = "^2.1.0"
+psycopg = "^3.1.16"
+psycopg-binary = "^3.1.16"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
