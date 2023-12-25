@@ -3,12 +3,12 @@ from pydantic import ValidationError
 
 from app.database import Session
 from app.models import Product, ProductStatus
-from app.schemas import ProductCreate, ProductCategory
+from app.schemas import ProductSchema, ProductCategory
 
 
 def create_product(product: dict) -> bool:
     try:
-        product = ProductCreate(**product)
+        product = ProductSchema(**product)
     except ValidationError:
         return False
 
@@ -28,7 +28,7 @@ def read_product_by_id(id: int) -> dict | None:
     if not product:
         return None
 
-    product = ProductCreate.from_orm(product).__dict__
+    product = ProductSchema.from_orm(product).__dict__
     product["category"] = product["category"].value
     return product
 
@@ -37,6 +37,7 @@ def read_product_by_category(category: ProductCategory) -> list[dict]:
     with Session() as db:
         products = db.execute(
             select(Product.name, Product.price, Product.manufacturer)
+            .distinct()
             .where(Product.status == ProductStatus.free)
             .where(Product.category == category)
         ).all()
@@ -49,6 +50,17 @@ def update_product_status(id: int, new_status: ProductStatus) -> bool:
         if not product:
             return False
         product.status = new_status
+        db.commit()
+    return True
+
+
+def update_product_price(product: ProductSchema, new_price: int) -> bool:
+    with Session() as db:
+        products = db.get(Product, product).all()
+        if not products:
+            return False
+        for product in products:
+            product.price = new_price
         db.commit()
     return True
 
