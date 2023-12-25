@@ -28,5 +28,5 @@ def read_user(id: int) -> dict | None:
     if not user:
         return None
     user = UserSchema.from_orm(user).__dict__
-    user['rights'] = user['rights'].value
+    user["rights"] = user["rights"].value
     return user
