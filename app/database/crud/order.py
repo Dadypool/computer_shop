@@ -16,7 +16,7 @@ def create_cart(user_id: int) -> bool:
 
 
 def create_order(user_id: int) -> bool:
-    cart = read_user_cart_by_user_id(user_id)
+    cart = read_cart_by_user_id(user_id)
     with Session() as db:
         db_order = db.get(Order, cart["id"])
         for product in db_order.products:
@@ -28,7 +28,7 @@ def create_order(user_id: int) -> bool:
     return True
 
 
-def read_user_cart_by_user_id(user_id: int) -> list[dict]:
+def read_cart_by_user_id(user_id: int) -> list[dict]:
     stmt = select(Order).where(Order.user_id == user_id).where(Order.status == OrderStatus.cart)
     with Session() as db:
         cart = db.scalars(stmt).all()
@@ -105,7 +105,7 @@ def read_products_by_order_id(order_id: int) -> list[dict]:
 
 
 def read_products_in_cart_by_user_id(user_id: int) -> list[dict]:
-    cart = read_user_cart_by_user_id(user_id)
+    cart = read_cart_by_user_id(user_id)
     return read_products_by_order_id(cart["id"])
 
 
