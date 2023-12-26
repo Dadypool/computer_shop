@@ -2,7 +2,7 @@ from sqlalchemy import select
 from pydantic import ValidationError
 
 from app.database.sqlalchemy import Session
-from app.database.models import Order, OrderStatus, Product
+from app.database.models import User, Order, OrderStatus, Product
 from app.database.schemas import OrderCreate, OrderSchema, ProductSchema
 
 
@@ -15,20 +15,16 @@ def create_cart(user_id: int) -> bool:
     return True
 
 
-def create_order(order: dict) -> bool:
-    try:
-        order = OrderCreate(**order)
-    except ValidationError:
-        return False
-
-    db_order = Order(**order.dict())
+def create_order(user_id: int) -> bool:
+    cart = read_user_cart_by_user_id(user_id)
     with Session() as db:
+        db_order = db.get(Order, cart["id"])
         for product in db_order.products:
             db_product = db.get(Product, product.id)
             db_product.status = "ordered"
-        db.add(db_order)
+        db_order.status = "ordered"
         db.commit()
-        db.refresh(db_order)
+    create_cart(user_id)
     return True
 
 
