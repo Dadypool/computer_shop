@@ -1,9 +1,9 @@
 import asyncio
 
 from aiogram import Bot, Dispatcher
-from botconfig import settings
+from app.config import settings
 
-from handlers import user, common
+from app.bot.handlers import user, common
 
 bot = Bot(settings.Token)
 dp = Dispatcher()

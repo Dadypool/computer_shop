@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.database.dbconfig import settings
+from app.config import settings
 from app.database.models import Base
 
 sync_engine = create_engine(

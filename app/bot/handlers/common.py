@@ -1,35 +1,44 @@
+import sys, os
+
 from aiogram import types
 from aiogram import Router, F
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
-from state_machine import userstate
+from app.bot.state_machine import userstate
 
-from keyboards import user, seller
+from app.bot.keyboards import user as user_kb, seller
+from app.bot.state_machine import userstate
+from app.bot.state_machine import sellerstate
+from app.database.crud import user
 
-from state_machine import userstate
-from state_machine import sellerstate
+#sys.path.append(os.path.join(os.getcwd(), '..'))
+
 
 router = Router()  
 
+
+
 @router.message(CommandStart())
 async def command_start(message: types.Message, state: FSMContext):
-    await message.answer("Приветсвуем Вас в нашем магазине!")
+    #await message.answer("Приветсвуем Вас в нашем магазине!")
+    usr = user.read_user(message.from_user.id)
     ##############################################################
     ##
     ## TODO: getting data about user with id = message.from_user.id
     ##
     ##############################################################
-    if None == 1: # if there is no user with this id in database - register
+    if usr == None: # if there is no user with this id in database - register
         await message.answer("Мы не знакомы! Запускаем процесс регистрации:\nВведите ваше имя:")
         await state.set_state(userstate.register)
-    elif None == 1: # if user connection detected
-        name = "name" # TODO: replace with name
-        await message.answer(f"Приветсвуем, {name}!", reply_markup=user.usermenu())
-        await state.set_state(userstate.menu)
-    elif None == None: # if seller connection detected
-        name = "name" # TODO: replace with name
-        await message.answer(f"Приветсвуем, {name}!", reply_markup=seller.sellermenu())
-        await state.set_state(sellerstate.menu)
+    else:
+        name = usr["name"]
+        if usr["rights"] == "user": # if user connection detected
+             # TODO: replace with name
+            await message.answer(f"Приветсвуем, {name}!", reply_markup=user_kb.usermenu())
+            await state.set_state(userstate.menu)
+        elif usr["seller"] == "seller": # if seller connection detected
+            await message.answer(f"Приветсвуем, {name}!", reply_markup=seller.sellermenu())
+            await state.set_state(sellerstate.menu)
 
 # TODO: implement menu handler
 '''@router.message(Command("menu"))

@@ -24,3 +24,45 @@ def usermenu() -> InlineKeyboardMarkup:
 
     ])
     return usermenu
+
+def category() -> InlineKeyboardMarkup:
+    category = InlineKeyboardMarkup(inline_keyboard=[
+    [
+        InlineKeyboardButton(
+            text="Процессоры",
+            callback_data="cpu" # Отработано
+        )
+    ],
+    [
+        InlineKeyboardButton(
+            text="Видеокарты", 
+            callback_data="gpu"
+        )
+    ],
+    [
+        InlineKeyboardButton(
+            text="Оперативная память",
+            callback_data="ram"
+        )
+    ],
+    [
+        InlineKeyboardButton(
+            text="Жесткие диски",
+            callback_data="hdd"
+        )
+    ],
+    [
+        InlineKeyboardButton(
+            text="Блоки питания",
+            callback_data="ps"
+        )
+    ],
+    [
+        InlineKeyboardButton(
+            text="Корпуса",
+            callback_data="ps"
+        )
+    ],
+
+    ])
+    return category
