@@ -22,7 +22,7 @@ def create_order(user_id: int) -> bool:
         for product in db_order.products:
             db_product = db.get(Product, product.id)
             db_product.status = "ordered"
-        db_order.status = "ordered"
+        db_order.status = "created"
         db.commit()
     create_cart(user_id)
     return True
