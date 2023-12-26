@@ -6,7 +6,7 @@ from sqlalchemy import ForeignKey, String, text
 from sqlalchemy.types import BigInteger
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
-intpk = Annotated[int, mapped_column(primary_key=True)]
+intpk = Annotated[BigInteger, mapped_column(primary_key=True)]
 created_at = Annotated[
     datetime.datetime,
     mapped_column(
