@@ -57,23 +57,27 @@ async def add(callback: types.CallbackQuery, state: FSMContext):
 ######################## Просмотр заказов ########################
 @router.callback_query(F.data == "order")
 async def view_order(callback: types.CallbackQuery, state: FSMContext):
-    orders = order.read_orders_by_user_id(callback.message.from_user.id)
-    await callback.message.edit_reply_markup(reply_markup=None)
-    await callback.message.answer("Выберите заказ для просмотра", reply_markup=user_kb.orders(orders))
+    orders = order.read_orders_by_user_id(callback.from_user.id)
+    if orders:
+        await callback.message.edit_reply_markup(reply_markup=None)
+        await callback.message.answer("Выберите заказ для просмотра", reply_markup=user_kb.orders(orders))
+    else:
+        await callback.message.edit_reply_markup(reply_markup=None)
+        await callback.message.answer("У вас нет заказов", reply_markup=user_kb.usermenu())
 
 @router.callback_query(F.data.startswith("o:"))
 async def order_list(callback: types.CallbackQuery, state: FSMContext):
     order_id = callback.data.split(":")[1]
-    order_list = order.read_products_by_order_id(order_id) # TODO: обработка запроса
+    order_list = order.read_products_by_order_id(int(order_id)) # TODO: обработка запроса
     result_str = ""
     total_price = 0
 
     for index, product in enumerate(order_list, start=1):
-        result_str += f"{index}. {product['name']}, цена{product['price']}\n"
+        result_str += f"{index}. {product['name']}, price: {product['price']}€\n"
         total_price += product['price']
 
-    result_str += f"Total: {total_price}"
-    await callback.message.answer("result_str", reply_markup=user_kb.usermenu())
+    result_str += f"Total: {total_price}€."
+    await callback.message.answer(result_str, reply_markup=user_kb.usermenu())
 ##################################################################
 
 
@@ -97,5 +101,14 @@ async def basket_remove(callback: types.CallbackQuery, state: FSMContext):
     else:
         await callback.message.edit_reply_markup(reply_markup=None)
         await callback.message.answer("Ошибка удаления из корзины!", reply_markup=user_kb.usermenu())
+
+
+@router.callback_query(F.data == "buy")
+async def buy(callback: types.CallbackQuery, state: FSMContext):
+    await callback.message.edit_reply_markup(reply_markup=None)
+    if order.create_order(callback.from_user.id):
+        await callback.message.answer("Заказ успешно офомлен!", reply_markup=user_kb.usermenu())
+    else:
+        await callback.message.answer("Ошибка оформления заказа!", reply_markup=user_kb.usermenu())
 
 ##################################################################

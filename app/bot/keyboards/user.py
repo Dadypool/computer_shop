@@ -1,4 +1,5 @@
 from aiogram.types import KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
+from datetime import datetime
 
 # main user menu
 def usermenu() -> InlineKeyboardMarkup:
@@ -83,8 +84,8 @@ def orders(orders) -> InlineKeyboardMarkup:
     inline_keyboard = [
 
             [
-                InlineKeyboardButton(text=f"{index + 1}. {order['id']}, {order['created_at']}, {order['status']}", callback_data='o:' + str(order['id'])) 
-                for index, order in enumerate(orders)
+                InlineKeyboardButton(text=f"Заказ №{order['id']} от {order['created_at'].strftime('%d.%m.%Y %H:%M')}, статус: {str(order['status']).split('.')[1]}", callback_data='o:' + str(order['id'])) 
+                for order in orders
             ]
 
     ]
@@ -101,3 +102,4 @@ def cart(products) -> InlineKeyboardMarkup:
     inline_keyboard.append([InlineKeyboardButton(text = "Оформить!", callback_data="buy")])
     inline_keyboard.append([InlineKeyboardButton(text = "> В меню", callback_data="menu")])
     return  InlineKeyboardMarkup(inline_keyboard=inline_keyboard, row_width=1)
+
