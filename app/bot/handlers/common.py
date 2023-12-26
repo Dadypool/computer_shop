@@ -36,13 +36,17 @@ async def command_start(message: types.Message, state: FSMContext):
              # TODO: replace with name
             await message.answer(f"Приветсвуем, {name}!", reply_markup=user_kb.usermenu())
             await state.set_state(userstate.menu)
-        elif usr["seller"] == "seller": # if seller connection detected
+        elif usr["rights"] == "seller": # if seller connection detected
             await message.answer(f"Приветсвуем, {name}!", reply_markup=seller_kb.sellermenu())
             await state.set_state(sellerstate.menu)
 
 # TODO: implement menu handler
 @router.message(Command("menu"))
 async def command_menu(message: types.Message, state: FSMContext):
+    await menu(state, message)
+
+@router.callback_query(F.data == "menu")
+async def callback_menu(message: types.Message, state: FSMContext):
     await menu(state, message)
     
 

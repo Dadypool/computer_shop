@@ -81,4 +81,5 @@ def _update_product_price():
 
 
 if __name__ == "__main__":
-    _read_product()
+    _create_product()
+    #_update_product_price()

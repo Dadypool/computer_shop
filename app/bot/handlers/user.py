@@ -36,37 +36,35 @@ async def catalog(callback: types.CallbackQuery, state: FSMContext):
 
 @router.callback_query(F.data.startswith("p:")) # добавление в корзину
 async def add(callback: types.CallbackQuery, state: FSMContext):
-    product = callback.data.split(":")[1]
-    ### TODO: add product to basket
-    ###
-    ### 
-    ###
-    ###
+    product_name = callback.data.split(":")[1]
 
-    await callback.message.edit_reply_markup(reply_markup=None)
-    await callback.message.answer("Товар успешно добавлен в корзину!", reply_markup=user_kb.usermenu())
-
+    #print(product_name)
+    product_id = str(product.read_free_product_by_name(product_name)["id"])
+    print(callback.from_user.id, product_id)
+    if product_id:
+        if product.update_add_product_to_cart(callback.from_user.id, product_id):
+            await callback.message.edit_reply_markup(reply_markup=None)
+            await callback.message.answer("Товар успешно добавлен в корзину!", reply_markup=user_kb.usermenu())
+        else:
+            await callback.message.edit_reply_markup(reply_markup=None)
+            await callback.message.answer("Ошибка добавления в корзину!", reply_markup=user_kb.usermenu())
+    else:
+        await callback.message.edit_reply_markup(reply_markup=None)
+        await callback.message.answer("Такого продукта нет в наличии!", reply_markup=user_kb.usermenu())
 #######################################################################
 
 
 ######################## Просмотр заказов ########################
 @router.callback_query(F.data == "order")
-async def order(callback: types.CallbackQuery, state: FSMContext):
+async def view_order(callback: types.CallbackQuery, state: FSMContext):
     orders = order.read_orders_by_user_id(callback.message.from_user.id)
-
     await callback.message.edit_reply_markup(reply_markup=None)
-    await callback.message.answer("Выберите заказ для просмотра", reply_markup=user_kb.usermenu())
+    await callback.message.answer("Выберите заказ для просмотра", reply_markup=user_kb.orders(orders))
 
 @router.callback_query(F.data.startswith("o:"))
 async def order_list(callback: types.CallbackQuery, state: FSMContext):
     order_id = callback.data.split(":")[1]
-    #order_list = order.read_products_by_order_id(order_id) # TODO: обработка запроса
-    order_list = [
-        {"name": "Товар1", "price": 100},
-        {"name": "Товар2", "price": 200},
-        {"name": "Товар2", "price": 200},
-    # Другие элементы списка
-                ]
+    order_list = order.read_products_by_order_id(order_id) # TODO: обработка запроса
     result_str = ""
     total_price = 0
 
@@ -82,17 +80,17 @@ async def order_list(callback: types.CallbackQuery, state: FSMContext):
 ######################## Работа с корзиной ########################
 @router.callback_query(F.data == "basket")
 async def basket(callback: types.CallbackQuery, state: FSMContext):
-    products = order.read_cart_products_by_user_id(callback.message.from_user.id)
+    products = order.read_products_in_cart_by_user_id(callback.from_user.id)
     if products:
         await callback.message.edit_reply_markup(reply_markup=None)
-        await callback.message.answer("Если хотите удалить какой-то товаи из корзины = выберете его.", reply_markup=user_kb.basket(products))
+        await callback.message.answer("Если хотите удалить какой-то товаи из корзины = выберете его.", reply_markup=user_kb.cart(products))
     else:
         await callback.message.answer("Корзина пуста", reply_markup=user_kb.usermenu())
 
 @router.callback_query(F.data.startswith("c:"))
 async def basket_remove(callback: types.CallbackQuery, state: FSMContext):
     product_id = callback.data.split(":")[1]
-    if order.remove_product_from_cart(callback.message.from_user.id, product_id):
+    if order.remove_product_from_cart(callback.from_user.id, product_id):
         await callback.message.edit_reply_markup(reply_markup=None)
         await callback.message.answer("Товар успешно удален из корзины!", reply_markup=user_kb.usermenu())
     else:
