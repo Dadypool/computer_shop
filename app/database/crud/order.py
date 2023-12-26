@@ -97,6 +97,13 @@ def read_products_by_order_id(order_id: int) -> list[dict]:
     return [ProductSchema.from_orm(product).__dict__ for product in products]
 
 
+def read_products_in_cart_by_user_id(user_id: int) -> list[dict]:
+    cart = read_user_cart_by_user_id(user_id)
+    return read_products_by_order_id(cart["id"])
+
+
+
+
 def read_order_price(order_id: int) -> int:
     stmt = select(Order).where(Order.id == order_id)
     with Session() as db:
