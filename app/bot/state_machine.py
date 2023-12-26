@@ -9,5 +9,7 @@ class userstate(StatesGroup):
     
 class sellerstate(StatesGroup):
     menu = State()      # main menu state
+    enter_id = State()  # enter id state
+    add_product = State()  # add product state
 
 #class userstate(StatesGroup):

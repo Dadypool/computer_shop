@@ -10,7 +10,7 @@ def sellermenu() -> InlineKeyboardMarkup:
     ],
     [
         InlineKeyboardButton(
-            text="Просотр заказов", 
+            text="Просмотр заказов", 
             callback_data="order_view"
         )
     ],
@@ -35,3 +35,22 @@ def delete_or_create() -> InlineKeyboardMarkup:
 
     ])
     return delete_or_create
+
+
+def yes_or_no(id) -> InlineKeyboardMarkup:
+    yes_or_no = InlineKeyboardMarkup(inline_keyboard=[
+    [
+        InlineKeyboardButton(
+            text="Да",
+            callback_data="delid:"+str(id)
+        )
+    ],
+    [
+        InlineKeyboardButton(
+            text="Нет",
+            callback_data=None
+        )
+    ],
+
+    ])
+    return yes_or_no
