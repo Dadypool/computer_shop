@@ -3,7 +3,7 @@ from pydantic import ValidationError
 
 from app.database.sqlalchemy import Session
 from app.database.models import Order, OrderStatus, Product
-from app.database.schemas import OrderCreate, OrderSchema
+from app.database.schemas import OrderCreate, OrderSchema, ProductSchema
 
 
 def create_order(order: dict) -> bool:
@@ -62,6 +62,7 @@ def read_free_order_by_name(name: str) -> dict | None:
         return None
     return OrderSchema.from_orm(order).__dict__
 
+
 def read_created_orders() -> list[dict]:
     stmt = (
         select(Order)
@@ -71,6 +72,13 @@ def read_created_orders() -> list[dict]:
     with Session() as db:
         orders = db.scalars(stmt).all()
     return [OrderSchema.from_orm(order).__dict__ for order in orders]
+
+
+def read_products_by_order_id(order_id: int) -> list[dict]:
+    stmt = select(Product).where(Product.order_id == order_id)
+    with Session() as db:
+        products = db.scalars(stmt).all()
+    return [ProductSchema.from_orm(product).__dict__ for product in products]
 
 
 def read_order_price(order_id: int) -> int:
