@@ -4,6 +4,7 @@ from pydantic import ValidationError
 from app.database.sqlalchemy import Session
 from app.database.models import Product, ProductStatus
 from app.database.schemas import ProductSchema, ProductCategory
+from app.database.crud.order import read_cart_by_user_id, read_products_by_order_id
 
 
 def create_product(product: dict) -> bool:
@@ -61,6 +62,27 @@ def update_product_price(product: ProductSchema, new_price: int) -> bool:
             return False
         for product in products:
             product.price = new_price
+        db.commit()
+    return True
+
+def update_add_product_to_card(user_id: int, product_id: int) -> bool:
+    with Session() as db:
+        product = db.get(Product, product_id).firtst()
+        if not product:
+            return False
+        product.order_id = read_cart_by_user_id(user_id)["id"]
+        product.status = "reserved"
+        db.commit()
+    return True
+
+
+def update_remove_product_from_card(user_id: int, product_id: int) -> bool:
+    with Session() as db:
+        product = db.get(Product, product_id).firtst()
+        if not product:
+            return False
+        product.order_id = None
+        product.status = "free"
         db.commit()
     return True
 
