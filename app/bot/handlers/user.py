@@ -1,16 +1,10 @@
-import sys, os
-
 from aiogram import types
 from aiogram import Router, F
-from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 
 from app.bot.state_machine import userstate
-from app.bot.keyboards import user as user_kb, seller
+from app.bot.keyboards import user as user_kb
 from app.database.crud import user, product, order
-
-#sys.path.append(os.path.join(os.getcwd(), '..'))
-
 
 router = Router()  
 
@@ -21,7 +15,6 @@ async def register(message: types.Message, state: FSMContext):
         await message.answer("Вы успешно зарегистрированы", reply_markup=user_kb.usermenu())
     else:
         await message.answer("Ошибка регистрации")
-
 
 
 ######################## Добавление в корзину ########################

@@ -55,7 +55,7 @@ async def menu(state: FSMContext, message: types.Message):
     print("Current state:", userstate)
     if current_state in [sellerstate.menu]:
         await state.set_state(sellerstate.menu)
-        await message.answer("Главное меню", reply_markup=seller_kb.usermenu())
+        await message.answer("Главное меню", reply_markup=seller_kb.sellermenu())
         
     else:
          await state.set_state(userstate.menu)   

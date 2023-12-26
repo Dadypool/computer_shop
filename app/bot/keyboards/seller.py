@@ -4,8 +4,8 @@ def sellermenu() -> InlineKeyboardMarkup:
     usermenu = InlineKeyboardMarkup(inline_keyboard=[
     [
         InlineKeyboardButton(
-            text="Редактировать каталок",
-            callback_data="catalog_edit" # Отработано
+            text="Редактировать каталог",
+            callback_data="catalog_edit"
         )
     ],
     [
@@ -16,4 +16,4 @@ def sellermenu() -> InlineKeyboardMarkup:
     ],
 
     ])
-    return usermenu
+    return sellermenu
