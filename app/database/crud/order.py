@@ -2,7 +2,7 @@ from sqlalchemy import select
 from pydantic import ValidationError
 
 from app.database.sqlalchemy import Session
-from app.database.models import Order, OrderStatus
+from app.database.models import Order, OrderStatus, Product
 from app.database.schemas import OrderCreate
 
 
@@ -14,6 +14,9 @@ def create_order(order: dict) -> bool:
 
     db_order = Order(**order.dict())
     with Session() as db:
+        for product in db_order.products:
+            db_product = db.get(Product, product.id)
+            db_product.status = "ordered"
         db.add(db_order)
         db.commit()
         db.refresh(db_order)
@@ -31,10 +34,8 @@ def read_order_by_id(id: int) -> dict | None:
     stmt = select(Order).where(Order.id == id)
     with Session() as db:
         order = db.scalars(stmt).first()
-
     if not order:
         return None
-
     return order
 
 
