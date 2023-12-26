@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, ConfigDict
 
-from app.database.models import Rights, Category
+from app.database.models import Rights, Category, OrderStatus
 
 price_constr = Field(gt=0)
 str_constr = Field(min_length=2, max_length=30)
@@ -29,3 +29,11 @@ class ProductSchema(ProductCategory):
 class OrderCreate(MyBaseModel):
     user_id: int
     products: list[ProductSchema]
+
+
+class OrderSchema(MyBaseModel):
+    id: int
+    user_id: int
+    status: OrderStatus
+    created_at: int
+    updated_at: int
