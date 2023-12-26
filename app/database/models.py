@@ -3,6 +3,7 @@ import enum
 from typing import Annotated, Optional
 
 from sqlalchemy import ForeignKey, String, text
+from sqlalchemy.types import BigInteger
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 intpk = Annotated[int, mapped_column(primary_key=True)]
@@ -23,7 +24,8 @@ str_256 = Annotated[str, 256]
 
 
 class Base(DeclarativeBase):
-    type_annotation_map = {str_256: String(256)}
+    type_annotation_map = {str_256: String(256),
+                           intpk: BigInteger}
 
     repr_cols_num = 3
     repr_cols = tuple()
