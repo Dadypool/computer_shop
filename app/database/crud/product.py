@@ -45,6 +45,15 @@ def read_product_by_category(category: ProductCategory) -> list[dict]:
     return [ProductCategory.from_orm(product).__dict__ for product in products]
 
 
+def read_free_product_by_name(name: str) -> dict | None:
+    stmt = select(Product).where(Product.name == name).where(Product.status == ProductStatus.free)
+    with Session() as db:
+        product = db.scalars(stmt).first()
+    if not product:
+        return None
+    return ProductSchema.from_orm(product).__dict__
+
+
 def update_product_status(id: int, new_status: ProductStatus) -> bool:
     with Session() as db:
         product = db.get(Product, id)

@@ -31,7 +31,7 @@ def create_order(user_id: int) -> bool:
 def read_cart_by_user_id(user_id: int) -> list[dict]:
     stmt = select(Order).where(Order.user_id == user_id).where(Order.status == OrderStatus.cart)
     with Session() as db:
-        cart = db.scalars(stmt).all()
+        cart = db.scalars(stmt).first()
     return OrderSchema.from_orm(cart).__dict__
 
 
@@ -64,15 +64,6 @@ def read_orders_by_user_id(user_id: int) -> list[dict]:
     with Session() as db:
         orders = db.scalars(stmt).all()
     return [OrderSchema.from_orm(order).__dict__ for order in orders]
-
-
-def read_free_order_by_name(name: str) -> dict | None:
-    stmt = select(Order).where(Order.name == name).where(Order.status == OrderStatus.free)
-    with Session() as db:
-        order = db.scalars(stmt).first()
-    if not order:
-        return None
-    return OrderSchema.from_orm(order).__dict__
 
 
 def read_created_orders() -> list[dict]:
