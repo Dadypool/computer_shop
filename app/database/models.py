@@ -65,7 +65,7 @@ class OrderStatus(enum.Enum):
     confirmed = "confirmed"
     canceled = "canceled"
     shipped = "shipped"
-    cloes = "closed"
+    closed = "closed"
 
 
 class User(Base):
