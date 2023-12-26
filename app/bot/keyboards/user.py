@@ -91,3 +91,13 @@ def orders(orders) -> InlineKeyboardMarkup:
     inline_keyboard.append([InlineKeyboardButton(text = "> В меню", callback_data="menu")])
     return  InlineKeyboardMarkup(inline_keyboard=inline_keyboard, row_width=1)
 
+def cart(products) -> InlineKeyboardMarkup:
+    inline_keyboard = [
+            [
+                InlineKeyboardButton(text=f"{index + 1}. {product['name']}, {product['product']}, {product['manufacturer']}", callback_data='c:' + str(product['id'])) 
+                for index, product in enumerate(products)
+            ]
+    ]
+    inline_keyboard.append([InlineKeyboardButton(text = "Оформить!", callback_data="buy")])
+    inline_keyboard.append([InlineKeyboardButton(text = "> Назад", callback_data="basket")])
+    return  InlineKeyboardMarkup(inline_keyboard=inline_keyboard, row_width=1)

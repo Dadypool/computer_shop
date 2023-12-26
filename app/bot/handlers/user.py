@@ -89,12 +89,21 @@ async def order_list(callback: types.CallbackQuery, state: FSMContext):
 ######################## Работа с корзиной ########################
 @router.callback_query(F.data == "basket")
 async def basket(callback: types.CallbackQuery, state: FSMContext):
-    
-    await callback.message.edit_reply_markup(reply_markup=None)
-    await callback.message.answer("Заглушка корзины", reply_markup=user_kb.usermenu())
+    products = order.read_cart_products_by_user_id(callback.message.from_user.id)
+    if products:
+        await callback.message.edit_reply_markup(reply_markup=None)
+        await callback.message.answer("Если хотите удалить какой-то товаи из корзины = выберете его.", reply_markup=user_kb.basket(products))
+    else:
+        await callback.message.answer("Корзина пуста", reply_markup=user_kb.usermenu())
 
-
-
-
+@router.callback_query(F.data.startswith("c:"))
+async def basket_remove(callback: types.CallbackQuery, state: FSMContext):
+    product_id = callback.data.split(":")[1]
+    if order.remove_product_from_cart(callback.message.from_user.id, product_id):
+        await callback.message.edit_reply_markup(reply_markup=None)
+        await callback.message.answer("Товар успешно удален из корзины!", reply_markup=user_kb.usermenu())
+    else:
+        await callback.message.edit_reply_markup(reply_markup=None)
+        await callback.message.answer("Ошибка удаления из корзины!", reply_markup=user_kb.usermenu())
 
 ##################################################################
