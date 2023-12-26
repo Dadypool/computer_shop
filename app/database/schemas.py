@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel, Field, ConfigDict
 
 from app.database.models import Rights, Category, OrderStatus
@@ -21,10 +23,11 @@ class ProductCategory(MyBaseModel):
     price: int = price_constr
     manufacturer: str = str_constr
 
-
-class ProductSchema(ProductCategory):
-    id: int
+class ProductCreate(ProductCategory):
     category: Category
+
+class ProductSchema(ProductCreate):
+    id: int
 
 
 class OrderCreate(MyBaseModel):
@@ -36,5 +39,5 @@ class OrderSchema(MyBaseModel):
     id: int
     user_id: int
     status: OrderStatus
-    created_at: int
-    updated_at: int
+    created_at: datetime
+    updated_at: datetime
