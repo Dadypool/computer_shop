@@ -13,6 +13,6 @@ async def main() -> None:
     await dp.start_polling(bot)
 
 if __name__ == '__main__':
-    dp.include_routers(common.router)
-    dp.include_routers(user.router)
+    dp.include_routers(user.router)   # the order is important!!!
+    dp.include_routers(common.router) # because the order of handlers
     asyncio.run(main())
