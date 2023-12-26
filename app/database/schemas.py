@@ -24,3 +24,8 @@ class ProductCategory(MyBaseModel):
 
 class ProductSchema(ProductCategory):
     category: Category
+
+
+class OrderCreate(MyBaseModel):
+    user_id: int
+    products: list[ProductSchema]
