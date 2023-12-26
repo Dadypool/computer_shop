@@ -55,6 +55,7 @@ class Category(enum.Enum):
 class ProductStatus(enum.Enum):
     free = "free"
     reserved = "reserved"
+    ordered = "ordered"
     sold = "sold"
 
 
