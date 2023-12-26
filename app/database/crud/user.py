@@ -17,8 +17,8 @@ def create_user(user: dict) -> bool:
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
-    
-    create_cart(db_user.id)
+    if db_user.rights == "user":
+        create_cart(db_user.id)
 
     return True
 
