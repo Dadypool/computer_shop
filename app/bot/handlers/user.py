@@ -59,18 +59,42 @@ async def add(callback: types.CallbackQuery, state: FSMContext):
 ######################## Просмотр заказов ########################
 @router.callback_query(F.data == "order")
 async def order(callback: types.CallbackQuery, state: FSMContext):
-    orders = order.read_orders_by_user_id(callable.message.from_user.id)
+    orders = order.read_orders_by_user_id(callback.message.from_user.id)
 
     await callback.message.edit_reply_markup(reply_markup=None)
     await callback.message.answer("Выберите заказ для просмотра", reply_markup=user_kb.usermenu())
 
+@router.callback_query(F.data.startswith("o:"))
+async def order_list(callback: types.CallbackQuery, state: FSMContext):
+    order_id = callback.data.split(":")[1]
+    #order_list = order.read_products_by_order_id(order_id) # TODO: обработка запроса
+    order_list = [
+        {"name": "Товар1", "price": 100},
+        {"name": "Товар2", "price": 200},
+        {"name": "Товар2", "price": 200},
+    # Другие элементы списка
+                ]
+    result_str = ""
+    total_price = 0
+
+    for index, product in enumerate(order_list, start=1):
+        result_str += f"{index}. {product['name']}, цена{product['price']}\n"
+        total_price += product['price']
+
+    result_str += f"Total: {total_price}"
+    await callback.message.answer("result_str", reply_markup=user_kb.usermenu())
 ##################################################################
 
 
 ######################## Работа с корзиной ########################
 @router.callback_query(F.data == "basket")
 async def basket(callback: types.CallbackQuery, state: FSMContext):
+    
     await callback.message.edit_reply_markup(reply_markup=None)
     await callback.message.answer("Заглушка корзины", reply_markup=user_kb.usermenu())
+
+
+
+
 
 ##################################################################

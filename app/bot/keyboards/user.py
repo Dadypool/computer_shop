@@ -83,12 +83,11 @@ def orders(orders) -> InlineKeyboardMarkup:
     inline_keyboard = [
 
             [
-                InlineKeyboardButton(text=f"{index + 1}. {order['name']}, {order['price']}₽", callback_data='o:' + str(order['name'])) 
+                InlineKeyboardButton(text=f"{index + 1}. {order['id']}, {order['created_at']}, {order['status']}", callback_data='o:' + str(order['id'])) 
                 for index, order in enumerate(orders)
             ]
 
     ]
-
-
-
+    inline_keyboard.append([InlineKeyboardButton(text = "> В меню", callback_data="menu")])
+    return  InlineKeyboardMarkup(inline_keyboard=inline_keyboard, row_width=1)
 
