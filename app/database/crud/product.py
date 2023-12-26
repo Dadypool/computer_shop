@@ -3,13 +3,13 @@ from pydantic import ValidationError
 
 from app.database.sqlalchemy import Session
 from app.database.models import Product, ProductStatus
-from app.database.schemas import ProductSchema, ProductCategory
+from app.database.schemas import ProductSchema, ProductCategory, ProductCreate
 from app.database.crud.order import read_cart_by_user_id, read_products_by_order_id
 
 
 def create_product(product: dict) -> bool:
     try:
-        product = ProductSchema(**product)
+        product = ProductCreate(**product)
     except ValidationError:
         return False
 
