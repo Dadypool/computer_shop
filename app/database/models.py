@@ -59,9 +59,11 @@ class ProductStatus(enum.Enum):
 
 
 class OrderStatus(enum.Enum):
+    cart = "cart"
     created = "created"
+    confirmed = "confirmed"
     shipped = "shipped"
-    delivered = "delivered"
+    cloes = "closed"
 
 
 class User(Base):
@@ -109,7 +111,7 @@ class Order(Base):
 
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"))
 
-    status: Mapped[OrderStatus]
+    status: Mapped[OrderStatus] = mapped_column(default=OrderStatus.created)
 
     created_at: Mapped[created_at]
 
