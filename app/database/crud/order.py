@@ -6,6 +6,15 @@ from app.database.models import Order, OrderStatus, Product
 from app.database.schemas import OrderCreate, OrderSchema, ProductSchema
 
 
+def create_cart(user_id: int) -> bool:
+    with Session() as db:
+        db_cart= Order(user_id=user_id, status=OrderStatus.cart)
+        db.add(db_cart)
+        db.commit()
+        db.refresh(db_cart)
+    return True
+
+
 def create_order(order: dict) -> bool:
     try:
         order = OrderCreate(**order)
