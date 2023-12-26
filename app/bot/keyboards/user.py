@@ -30,39 +30,65 @@ def category() -> InlineKeyboardMarkup:
     [
         InlineKeyboardButton(
             text="Процессоры",
-            callback_data="cpu" # Отработано
+            callback_data="category:cpu" # Отработано
         )
     ],
     [
         InlineKeyboardButton(
             text="Видеокарты", 
-            callback_data="gpu"
+            callback_data="category:gpu"
         )
     ],
     [
         InlineKeyboardButton(
             text="Оперативная память",
-            callback_data="ram"
+            callback_data="category:ram"
         )
     ],
     [
         InlineKeyboardButton(
             text="Жесткие диски",
-            callback_data="hdd"
+            callback_data="category:hdd"
         )
     ],
     [
         InlineKeyboardButton(
             text="Блоки питания",
-            callback_data="ps"
+            callback_data="category:ps"
         )
     ],
     [
         InlineKeyboardButton(
             text="Корпуса",
-            callback_data="ps"
+            callback_data="category:ps"
         )
     ],
 
     ])
     return category
+
+def products(products) -> InlineKeyboardMarkup:
+    inline_keyboard = [
+                            [
+                                InlineKeyboardButton(text=f"{index + 1}. {product['name']}, {product['price']}₽", callback_data='p:' + str(product['name']))
+                            ]
+
+                            for index, product in enumerate(products)
+                        ]
+
+    inline_keyboard.append([InlineKeyboardButton(text = "> В меню", callback_data="menu")])
+    return  InlineKeyboardMarkup(inline_keyboard=inline_keyboard, row_width=1)    
+
+def orders(orders) -> InlineKeyboardMarkup:
+    inline_keyboard = [
+
+            [
+                InlineKeyboardButton(text=f"{index + 1}. {order['name']}, {order['price']}₽", callback_data='o:' + str(order['name'])) 
+                for index, order in enumerate(orders)
+            ]
+
+    ]
+
+
+
+

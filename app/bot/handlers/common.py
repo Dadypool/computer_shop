@@ -6,7 +6,7 @@ from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 from app.bot.state_machine import userstate
 
-from app.bot.keyboards import user as user_kb, seller
+from app.bot.keyboards import user as user_kb, seller as seller_kb
 from app.bot.state_machine import userstate
 from app.bot.state_machine import sellerstate
 from app.database.crud import user
@@ -37,19 +37,26 @@ async def command_start(message: types.Message, state: FSMContext):
             await message.answer(f"Приветсвуем, {name}!", reply_markup=user_kb.usermenu())
             await state.set_state(userstate.menu)
         elif usr["seller"] == "seller": # if seller connection detected
-            await message.answer(f"Приветсвуем, {name}!", reply_markup=seller.sellermenu())
+            await message.answer(f"Приветсвуем, {name}!", reply_markup=seller_kb.sellermenu())
             await state.set_state(sellerstate.menu)
 
 # TODO: implement menu handler
-'''@router.message(Command("menu"))
+@router.message(Command("menu"))
 async def command_menu(message: types.Message, state: FSMContext):
-    current_state = await state.get_state()
-    print("Current state:", userstate)
-    if current_state in userstate:
-        await state.set_state(userstate.menu)
-    else:
-        await state.set_state(sellerstate.menu)'''
+    await menu(state, message)
+    
 
 @router.message()
 async def echo_handler(message: types.Message) -> None:
     await message.delete()
+
+async def menu(state: FSMContext, message: types.Message):
+    current_state = await state.get_state()
+    print("Current state:", userstate)
+    if current_state in [sellerstate.menu]:
+        await state.set_state(sellerstate.menu)
+        await message.answer("Главное меню", reply_markup=seller_kb.usermenu())
+        
+    else:
+         await state.set_state(userstate.menu)   
+         await message.answer("Главное меню", reply_markup=user_kb.usermenu())

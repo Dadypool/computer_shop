@@ -28,19 +28,19 @@ def _create_product():
         {
             "name": "Intel Core i7",
             "price": 300,
-            "category": "processor",
+            "category": "cpu",
             "manufacturer": "Intel",
         },
         {
             "name": "AMD Ryzen 5",
             "price": 250,
-            "category": "processor",
+            "category": "cpu",
             "manufacturer": "AMD",
         },
         {
             "name": "NVIDIA GeForce RTX 3080",
             "price": 800,
-            "category": "graphics card",
+            "category": "gpu",
             "manufacturer": "NVIDIA",
         },
         {
@@ -58,7 +58,7 @@ def _create_product():
         {
             "name": "EVGA 750 B5",
             "price": 120,
-            "category": "power supply",
+            "category": "ps",
             "manufacturer": "EVGA",
         },
         {"name": "NZXT H510", "price": 90, "category": "block", "manufacturer": "NZXT"},
@@ -81,4 +81,4 @@ def _update_product_price():
 
 
 if __name__ == "__main__":
-    _create_tables()
+    _read_product()
