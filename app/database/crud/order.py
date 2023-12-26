@@ -121,12 +121,18 @@ def read_order_price(order_id: int) -> int:
     return price
 
 
-def update_order_status(id: int, new_status: OrderStatus) -> bool:
+def update_order_status(order_id: int, new_status: OrderStatus) -> bool:
     with Session() as db:
         order = db.get(Order, id)
         if not order or order.status == "cart":
             return False
         order.status = new_status
+        if new_status == "confirmed":
+            for product in order.products:
+                product.status = "ordered"
+        elif new_status == "closed":
+            for product in order.products:
+                product.status = "sold"
         db.commit()
     return True
 
