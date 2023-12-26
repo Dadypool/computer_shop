@@ -16,8 +16,6 @@ async def delete_or_create(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.edit_reply_markup(reply_markup=None)
     await callback.message.answer("Выберите тип действия", reply_markup=seller_kb.delete_or_create())
 
-
-
 @router.callback_query(F.data == "delete_product")
 async def delete_product(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.answer("Введите id товара для удаления", reply_markup=None)
@@ -25,11 +23,11 @@ async def delete_product(callback: types.CallbackQuery, state: FSMContext):
 
 @router.message(sellerstate.enter_id)
 async def enter_id(message: types.Message, state: FSMContext):
-    product_to_delete = product.read_product_by_id(int(message))
+    product_to_delete = product.read_product_by_id(int(message.text))
     if product_to_delete == None:
         await message.answer("Такого товара не существует, повторите попытку")
     else:
-        await message.answer(f"Подтвердите уддаление товара:\nID: {product_to_delete['id']}\nНазвание: {product_to_delete['name']}\nЦена: {product_to_delete['price']}\nСтатус: {product_to_delete['status']}", reply_markup=seller_kb.yes_or_no(product_to_delete['id']))
+        await message.answer(f"Подтвердите уддаление товара:\nID: {product_to_delete['id']}\nНазвание: {product_to_delete['name']}\nЦена: {product_to_delete['price']}", reply_markup=seller_kb.yes_or_no(product_to_delete['id']))
         await state.set_state(sellerstate.menu)
 
 @router.callback_query(F.data.startswith("delid:"))

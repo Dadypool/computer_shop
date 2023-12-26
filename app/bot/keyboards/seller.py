@@ -42,13 +42,13 @@ def yes_or_no(id) -> InlineKeyboardMarkup:
     [
         InlineKeyboardButton(
             text="Да",
-            callback_data="delid:"+str(id)
+            callback_data="delid:" + str(id)
         )
     ],
     [
         InlineKeyboardButton(
             text="Нет",
-            callback_data=None
+            callback_data="menu"
         )
     ],
 

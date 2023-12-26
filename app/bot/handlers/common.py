@@ -29,7 +29,7 @@ async def command_start(message: types.Message, state: FSMContext):
             await message.answer(f"Приветсвуем, {name}!", reply_markup=user_kb.usermenu())
             await state.set_state(userstate.menu)
         elif usr["rights"] == "seller": # if seller connection detected
-            await message.answer(f"Приветсвуем, {name}!", reply_markup=seller_kb.sellermenu())
+            await message.answer(f"Здравствуйте, {name}!", reply_markup=seller_kb.sellermenu())
             await state.set_state(sellerstate.menu)
 
 # TODO: implement menu handler
@@ -50,7 +50,7 @@ async def echo_handler(message: types.Message) -> None:
 async def menu(state: FSMContext, message: types.Message):
     current_state = await state.get_state()
     print("Current state:", userstate)
-    if current_state in [sellerstate.menu]:
+    if current_state in [sellerstate.menu, sellerstate.enter_id, sellerstate.add_product]:
         await state.set_state(sellerstate.menu)
         await message.answer("Главное меню", reply_markup=seller_kb.sellermenu())
         
