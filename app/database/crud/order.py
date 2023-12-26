@@ -86,6 +86,17 @@ def read_created_orders() -> list[dict]:
     return [OrderSchema.from_orm(order).__dict__ for order in orders]
 
 
+def read_confirmed_orders() -> list[dict]:
+    stmt = (
+        select(Order)
+        .where(Order.status == OrderStatus.confirmed)
+        .order_by(Order.updated_at)
+    )
+    with Session() as db:
+        orders = db.scalars(stmt).all()
+    return [OrderSchema.from_orm(order).__dict__ for order in orders]
+
+
 def read_products_by_order_id(order_id: int) -> list[dict]:
     stmt = select(Product).where(Product.order_id == order_id)
     with Session() as db:
@@ -96,8 +107,6 @@ def read_products_by_order_id(order_id: int) -> list[dict]:
 def read_products_in_cart_by_user_id(user_id: int) -> list[dict]:
     cart = read_user_cart_by_user_id(user_id)
     return read_products_by_order_id(cart["id"])
-
-
 
 
 def read_order_price(order_id: int) -> int:
