@@ -48,7 +48,7 @@ def read_order_by_id(id: int) -> dict | None:
 
 
 def read_orders_by_user_id(user_id: int) -> list[dict]:
-    stmt = select(Order).where(Order.user_id == user_id)
+    stmt = select(Order).where(Order.user_id == user_id).where(Order.status != OrderStatus.cart)
     with Session() as db:
         orders = db.scalars(stmt).all()
     return [OrderSchema.from_orm(order).__dict__ for order in orders]
