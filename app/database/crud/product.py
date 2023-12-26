@@ -101,6 +101,8 @@ def delete_product(id: int) -> bool:
         product = db.get(Product, id)
         if not product:
             return False
+        if product.status in ("ordered", "sold"):
+            return False
         db.delete(product)
         db.commit()
     return True
