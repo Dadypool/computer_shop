@@ -29,9 +29,8 @@ async def catalog(callback: types.CallbackQuery, state: FSMContext):
     category = callback.data.split(":")[1]
     products = product.read_product_by_category(category)
     if products:
-        await callback.message.edit_reply_markup(reply_markup=user_kb.products(products))
+        await callback.message.answer("Выберете продукт", reply_markup=user_kb.products(products))
     else:
-        await callback.message.edit_reply_markup(reply_markup=user_kb.usermenu)
         await callback.message.answer("Ошибка чтения каталога.", reply_markup=user_kb.usermenu())
 
 @router.callback_query(F.data.startswith("p:")) # добавление в корзину
