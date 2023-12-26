@@ -54,6 +54,14 @@ def read_orders_by_user_id(user_id: int) -> list[dict]:
     return [OrderSchema.from_orm(order).__dict__ for order in orders]
 
 
+def read_free_order_by_name(name: str) -> dict | None:
+    stmt = select(Order).where(Order.name == name).where(Order.status == OrderStatus.free)
+    with Session() as db:
+        order = db.scalars(stmt).first()
+    if not order:
+        return None
+    return OrderSchema.from_orm(order).__dict__
+
 def read_created_orders() -> list[dict]:
     stmt = (
         select(Order)
