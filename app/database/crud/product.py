@@ -65,7 +65,7 @@ def update_product_price(product: ProductSchema, new_price: int) -> bool:
         db.commit()
     return True
 
-def update_add_product_to_card(user_id: int, product_id: int) -> bool:
+def update_add_product_to_cart(user_id: int, product_id: int) -> bool:
     with Session() as db:
         product = db.get(Product, product_id).firtst()
         if not product:
@@ -76,7 +76,7 @@ def update_add_product_to_card(user_id: int, product_id: int) -> bool:
     return True
 
 
-def update_remove_product_from_card(user_id: int, product_id: int) -> bool:
+def update_remove_product_from_cart(user_id: int, product_id: int) -> bool:
     with Session() as db:
         product = db.get(Product, product_id).firtst()
         if not product:
