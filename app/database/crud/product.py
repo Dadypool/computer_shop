@@ -76,7 +76,7 @@ def update_product_price(product: ProductSchema, new_price: int) -> bool:
 
 def update_add_product_to_cart(user_id: int, product_id: int) -> bool:
     with Session() as db:
-        product = db.get(Product, product_id).firtst()
+        product = db.get(Product, product_id)
         if not product:
             return False
         product.order_id = read_cart_by_user_id(user_id)["id"]
@@ -87,7 +87,7 @@ def update_add_product_to_cart(user_id: int, product_id: int) -> bool:
 
 def update_remove_product_from_cart(user_id: int, product_id: int) -> bool:
     with Session() as db:
-        product = db.get(Product, product_id).firtst()
+        product = db.get(Product, product_id)
         if not product:
             return False
         product.order_id = None
