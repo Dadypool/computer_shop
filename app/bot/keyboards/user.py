@@ -1,7 +1,6 @@
 from aiogram.types import KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
 
 # main user menu
-
 def usermenu() -> InlineKeyboardMarkup:
     usermenu = InlineKeyboardMarkup(inline_keyboard=[
     [
@@ -19,9 +18,9 @@ def usermenu() -> InlineKeyboardMarkup:
     [
         InlineKeyboardButton(
             text="Мои заказы",
-            callback_data="Order"
+            callback_data="order"
         )
-    ]
+    ],
 
     ])
     return usermenu

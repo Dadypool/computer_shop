@@ -7,6 +7,7 @@ class userstate(StatesGroup):
     register = State()  # register state
     
     
-
+class sellerstate(StatesGroup):
+    menu = State()      # main menu state
 
 #class userstate(StatesGroup):
