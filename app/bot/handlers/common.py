@@ -1,5 +1,3 @@
-import sys, os
-
 from aiogram import types
 from aiogram import Router, F
 from aiogram.filters import CommandStart, Command
@@ -11,7 +9,6 @@ from app.bot.state_machine import userstate
 from app.bot.state_machine import sellerstate
 from app.database.crud import user
 
-#sys.path.append(os.path.join(os.getcwd(), '..'))
 
 
 router = Router()  
@@ -22,11 +19,6 @@ router = Router()
 async def command_start(message: types.Message, state: FSMContext):
     #await message.answer("Приветсвуем Вас в нашем магазине!")
     usr = user.read_user(message.from_user.id)
-    ##############################################################
-    ##
-    ## TODO: getting data about user with id = message.from_user.id
-    ##
-    ##############################################################
     if usr == None: # if there is no user with this id in database - register
         await message.answer("Мы не знакомы! Запускаем процесс регистрации:\nВведите ваше имя:")
         await state.set_state(userstate.register)
