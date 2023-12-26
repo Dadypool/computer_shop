@@ -4,7 +4,7 @@ from pydantic import ValidationError
 from app.database.sqlalchemy import Session
 from app.database.models import User
 from app.database.schemas import UserSchema
-
+from app.database.crud.order import create_cart
 
 def create_user(user: dict) -> bool:
     try:
@@ -17,6 +17,9 @@ def create_user(user: dict) -> bool:
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
+    
+    create_cart(db_user.id)
+
     return True
 
 
