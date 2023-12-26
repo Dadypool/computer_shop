@@ -63,6 +63,7 @@ class OrderStatus(enum.Enum):
     cart = "cart"
     created = "created"
     confirmed = "confirmed"
+    canceled = "canceled"
     shipped = "shipped"
     cloes = "closed"
 
