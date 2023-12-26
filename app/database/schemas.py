@@ -23,6 +23,7 @@ class ProductCategory(MyBaseModel):
 
 
 class ProductSchema(ProductCategory):
+    id: int
     category: Category
 
 
