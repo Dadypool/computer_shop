@@ -32,6 +32,13 @@ def create_order(order: dict) -> bool:
     return True
 
 
+def read_user_cart_by_user_id(user_id: int) -> list[dict]:
+    stmt = select(Order).where(Order.user_id == user_id).where(Order.status == OrderStatus.cart)
+    with Session() as db:
+        cart = db.scalars(stmt).all()
+    return OrderSchema.from_orm(cart).__dict__
+
+
 def read_active_orders(user_id: int) -> list[dict]:
     stmt = (
         select(Order)
