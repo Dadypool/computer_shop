@@ -83,14 +83,15 @@ async def basket(callback: types.CallbackQuery, state: FSMContext):
     products = order.read_products_in_cart_by_user_id(callback.from_user.id)
     if products:
         await callback.message.edit_reply_markup(reply_markup=None)
-        await callback.message.answer("Если хотите удалить какой-то товаи из корзины = выберете его.", reply_markup=user_kb.cart(products))
+        total_price = sum(i["price"] for i in products)
+        await callback.message.answer(f"Если хотите удалить какой-то товаи из корзины - выберете его.\nОбщая сумма тованов в корзине составляет {total_price}€", reply_markup=user_kb.cart(products))
     else:
         await callback.message.answer("Корзина пуста", reply_markup=user_kb.usermenu())
 
 @router.callback_query(F.data.startswith("c:"))
 async def basket_remove(callback: types.CallbackQuery, state: FSMContext):
     product_id = callback.data.split(":")[1]
-    if order.remove_product_from_cart(callback.from_user.id, product_id):
+    if product.update_remove_product_from_cart(callback.from_user.id, product_id):
         await callback.message.edit_reply_markup(reply_markup=None)
         await callback.message.answer("Товар успешно удален из корзины!", reply_markup=user_kb.usermenu())
     else:

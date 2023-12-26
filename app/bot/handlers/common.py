@@ -46,8 +46,9 @@ async def command_menu(message: types.Message, state: FSMContext):
     await menu(state, message)
 
 @router.callback_query(F.data == "menu")
-async def callback_menu(message: types.Message, state: FSMContext):
-    await menu(state, message)
+async def callback_menu(callback: types.CallbackQuery, state: FSMContext):
+    await callback.message.edit_reply_markup(reply_markup=None)
+    await menu(state, callback.message)
     
 
 @router.message()
