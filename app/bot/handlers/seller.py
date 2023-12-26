@@ -47,3 +47,8 @@ async def create_product(callback: types.CallbackQuery, state: FSMContext):
 
 
 #################################################################################################
+
+
+@router.message()
+async def echo_handler(message: types.Message) -> None:
+    await message.delete()
