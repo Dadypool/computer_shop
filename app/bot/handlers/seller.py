@@ -123,6 +123,16 @@ async def hardset(callback: types.CallbackQuery, state: FSMContext):
         await callback.message.answer("Ошибка выдачи, повторите попытку", reply_markup=seller_kb.sellermenu())
     await state.set_state(sellerstate.menu)
 
+
+#@router.callback_query(F.data.startswith("hts:"))
+#async def hardset(callback: types.CallbackQuery, state: FSMContext):
+#    id = callback.data[4:]
+#    if order.update_order_status(int(id), "closed"): # order.update_order_status
+#        await callback.message.answer("Статус измене", reply_markup=seller_kb.sellermenu())
+#    else:
+#        await callback.message.answer("Ошибка, повторите попытку", reply_markup=seller_kb.sellermenu())
+#    await state.set_state(sellerstate.menu)
+
 ##########################################################################################
 
 @router.message(sellerstate.menu)
