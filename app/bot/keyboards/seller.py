@@ -54,3 +54,41 @@ def yes_or_no(id) -> InlineKeyboardMarkup:
 
     ])
     return yes_or_no
+
+def order_action() -> InlineKeyboardMarkup:
+    order_action = InlineKeyboardMarkup(inline_keyboard=[
+    [
+        InlineKeyboardButton(
+            text="На подтверждение",
+            callback_data="approve"
+        )
+    ],
+    [
+        InlineKeyboardButton(
+            text="На выдачу",
+            callback_data="ready"
+        )
+    ],
+    [
+        InlineKeyboardButton(
+            text="Hardset",
+            callback_data="hardset"
+        )
+    ],
+    ])
+    return order_action
+
+def orders(orders, key) -> InlineKeyboardMarkup:
+    inline_keyboard = [
+
+            [
+                InlineKeyboardButton(text=f"Заказ №{order['id']} от {order['created_at'].strftime('%d.%m.%Y %H:%M')}", callback_data=str(key) + str(order['id'])) 
+                for order in orders
+            ]
+
+    ]
+    inline_keyboard.append([InlineKeyboardButton(text = "> В меню", callback_data="menu")])
+    return  InlineKeyboardMarkup(inline_keyboard=inline_keyboard, row_width=1)
+
+
+

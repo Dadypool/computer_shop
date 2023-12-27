@@ -76,6 +76,55 @@ async def add_product(message: types.Message, state: FSMContext):
 #################################################################################################
 
 
+
+######################## Обработка редактирования заказов ################################
+@router.callback_query(F.data == "order_view")
+async def order_view(callback: types.CallbackQuery, state: FSMContext):
+    await callback.message.edit_reply_markup(reply_markup=None)
+    await callback.message.answer("Выберите действие для заказа", reply_markup=seller_kb.order_action())
+
+
+
+@router.callback_query(F.data == "approve")
+async def approve(callback: types.CallbackQuery, state: FSMContext):
+    orders = order.read_created_orders()
+    if orders: 
+        await callback.message.answer("Выберите заказ для подтверждения", reply_markup=seller_kb.orders(orders,'apv:'))
+    else:
+        await callback.message.answer("Нет созданных заказов", reply_markup=seller_kb.sellermenu())
+
+
+@router.callback_query(F.data == "ready")
+async def ready(callback: types.CallbackQuery, state: FSMContext):
+    orders = order.read_confirmed_orders()
+    if orders: 
+        await callback.message.answer("Выберите заказ для выдачи", reply_markup=seller_kb.orders(orders, 'giv:'))
+    else:
+        await callback.message.answer("Нет подтвержденных заказов", reply_markup=seller_kb.sellermenu())
+
+
+
+@router.callback_query(F.data.startswith("apv:"))
+async def approve_by_id(callback: types.CallbackQuery, state: FSMContext):
+    id = callback.data[4:]
+    if order.update_order_status(int(id), "confirmed"): # order.update_order_status
+        await callback.message.answer("Заказ подтвержден", reply_markup=seller_kb.sellermenu())
+    else:
+        await callback.message.answer("Ошибка подтверждения, повторите попытку", reply_markup=seller_kb.sellermenu())
+    await state.set_state(sellerstate.menu)
+
+
+@router.callback_query(F.data.startswith("giv:"))
+async def hardset(callback: types.CallbackQuery, state: FSMContext):
+    id = callback.data[4:]
+    if order.update_order_status(int(id), "closed"): # order.update_order_status
+        await callback.message.answer("Заказ выдан", reply_markup=seller_kb.sellermenu())
+    else:
+        await callback.message.answer("Ошибка выдачи, повторите попытку", reply_markup=seller_kb.sellermenu())
+    await state.set_state(sellerstate.menu)
+
+##########################################################################################
+
 @router.message(sellerstate.menu)
 async def echo_handler(message: types.Message) -> None:
     await message.delete()
