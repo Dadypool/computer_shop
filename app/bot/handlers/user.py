@@ -111,3 +111,7 @@ async def buy(callback: types.CallbackQuery, state: FSMContext):
         await callback.message.answer("Ошибка оформления заказа!", reply_markup=user_kb.usermenu())
 
 ##################################################################
+        
+@router.message(userstate.menu)
+async def echo_handler(message: types.Message) -> None:
+    await message.delete()
