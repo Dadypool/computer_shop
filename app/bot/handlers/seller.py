@@ -11,6 +11,8 @@ router = Router()
 
 
 ######################## Обработка редактирования списка товаров ################################
+
+# Удаление:
 @router.callback_query(F.data == "catalog_edit")
 async def delete_or_create(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.edit_reply_markup(reply_markup=None)
@@ -41,14 +43,39 @@ async def delete_product(callback: types.CallbackQuery, state: FSMContext):
         await callback.message.answer("Ошибка удаления, повторите попытку", reply_markup=seller_kb.sellermenu())
         await state.set_state(sellerstate.menu)
 
+
+# Создание:
 @router.callback_query(F.data == "create_product")
 async def create_product(callback: types.CallbackQuery, state: FSMContext):
-    pass
+    await callback.message.answer("Введите занные в формате:", reply_markup=None)
+    await callback.message.answer("<ID>\n<Название>\n<Цена>\n<Категория>\n<Производитель>", reply_markup=None)
+    await state.set_state(sellerstate.add_product)
 
+
+@router.message(sellerstate.add_product)
+async def add_product(message: types.Message, state: FSMContext):
+    parsed = message.text.split("\n")
+    print(parsed)
+    if len(parsed) != 5:
+        await message.answer("Неправильно введены данные, повторите попытку")
+    else:
+        id, name, price, category, manufacturer = parsed
+        try:
+            if product.create_product({"id": int(id), "name": name, "price": int(price), "category": category, "manufacturer": manufacturer}): # (int(id), str(name), int(price), str(category), str(manufacturer))
+                await message.answer("Товар успешно добавлен", reply_markup=seller_kb.sellermenu())
+                await state.set_state(sellerstate.menu)
+            else:
+                await message.answer("Ошибка добавления, повторите попытку")
+                await message.answer("<ID>\n<Название>\n<Цена>\n<Категория>\n<Производитель>", reply_markup=None)
+
+        except:
+            print(id, name, price, category, manufacturer = parsed)
+            await message.answer("Неправильно введены данные, повторите попытку")
+            await message.answer("<ID>\n<Название>\n<Цена>\n<Категория>\n<Производитель>", reply_markup=None)
 
 #################################################################################################
 
 
-@router.message()
+@router.message(sellerstate.menu)
 async def echo_handler(message: types.Message) -> None:
     await message.delete()

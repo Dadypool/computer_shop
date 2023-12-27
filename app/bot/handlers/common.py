@@ -43,10 +43,6 @@ async def callback_menu(callback: types.CallbackQuery, state: FSMContext):
     await menu(state, callback.message)
     
 
-@router.message()
-async def echo_handler(message: types.Message) -> None:
-    await message.delete()
-
 async def menu(state: FSMContext, message: types.Message):
     current_state = await state.get_state()
     print("Current state:", userstate)
