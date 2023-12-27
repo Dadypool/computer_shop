@@ -29,7 +29,7 @@ async def enter_id(message: types.Message, state: FSMContext):
     if product_to_delete == None:
         await message.answer("Такого товара не существует, повторите попытку")
     else:
-        await message.answer(f"Подтвердите уддаление товара:\nID: {product_to_delete['id']}\nНазвание: {product_to_delete['name']}\nЦена: {product_to_delete['price']}", reply_markup=seller_kb.yes_or_no(product_to_delete['id']))
+        await message.answer(f"Подтвердите удаление товара:\nID: {product_to_delete['id']}\nНазвание: {product_to_delete['name']}\nЦена: {product_to_delete['price']}", reply_markup=seller_kb.yes_or_no(product_to_delete['id']))
         await state.set_state(sellerstate.menu)
 
 @router.callback_query(F.data.startswith("delid:"))
