@@ -114,7 +114,7 @@ def read_order_price(order_id: int) -> int:
 
 def update_order_status(order_id: int, new_status: OrderStatus) -> bool:
     with Session() as db:
-        order = db.get(Order, id)
+        order = db.get(Order, order_id)
         if not order or order.status == "cart":
             return False
         order.status = new_status
