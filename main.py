@@ -1,85 +1,21 @@
-from app.database.crud.user import create_user, read_user
-from app.database.crud.product import (
-    create_product,
-    read_product_by_id,
-    read_product_by_category,
-    update_product_status,
-    update_product_price
-)
-from app.database.sqlalchemy import create_tables
+import asyncio
+
+from aiogram import Bot, Dispatcher
+from app.config import settings
+
+from app.bot.handlers import user, seller, common
+
+bot = Bot(settings.Token)
+dp = Dispatcher()
 
 
-def _create_tables():
-    create_tables()
-
-
-def _create_user():
-    form_data = {"id": 1, "name": "Dan", "rights": "seller"}
-    res = create_user(form_data)
-    print(res)
-
-
-def _read_user():
-    return read_user(1)
-
-
-def _create_product():
-    products_data = [
-        {
-            "name": "Intel Core i7",
-            "price": 300,
-            "category": "cpu",
-            "manufacturer": "Intel",
-        },
-        {
-            "name": "AMD Ryzen 5",
-            "price": 250,
-            "category": "cpu",
-            "manufacturer": "AMD",
-        },
-        {
-            "name": "NVIDIA GeForce RTX 3080",
-            "price": 800,
-            "category": "gpu",
-            "manufacturer": "NVIDIA",
-        },
-        {
-            "name": "Corsair Vengeance LPX",
-            "price": 100,
-            "category": "ram",
-            "manufacturer": "Corsair",
-        },
-        {
-            "name": "Seagate Barracuda",
-            "price": 80,
-            "category": "hdd",
-            "manufacturer": "Seagate",
-        },
-        {
-            "name": "EVGA 750 B5",
-            "price": 120,
-            "category": "ps",
-            "manufacturer": "EVGA",
-        },
-        {"name": "NZXT H510", "price": 90, "category": "block", "manufacturer": "NZXT"},
-    ]
-
-    for product in products_data:
-        create_product(product)
-
-
-def _read_product():
-    print(read_product_by_category("block"))
-
-
-def _update_product_status():
-    update_product_status(1, "reserved")
-
-
-def _update_product_price():
-    update_product_price({"name": "NZXT H510", "price": 90, "category": "block", "manufacturer": "NZXT"}, 100)
+async def main() -> None:
+    await dp.start_polling(bot)
 
 
 if __name__ == "__main__":
-    _create_product()
-    #_update_product_price()
+    dp.include_routers(common.router)
+    dp.include_routers(user.router)  # the order is important!!!
+    dp.include_routers(seller.router)  # because the order of handlers
+
+    asyncio.run(main())
