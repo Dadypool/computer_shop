@@ -2,13 +2,13 @@ from sqlalchemy import select
 from pydantic import ValidationError
 
 from app.database.sqlalchemy import Session
-from app.database.models import User, Order, OrderStatus, Product
-from app.database.schemas import OrderCreate, OrderSchema, ProductSchema
+from app.database.models import Order, OrderStatus, Product
+from app.database.schemas import OrderSchema, ProductSchema
 
 
 def create_cart(user_id: int) -> bool:
     with Session() as db:
-        db_cart= Order(user_id=user_id, status=OrderStatus.cart)
+        db_cart = Order(user_id=user_id, status=OrderStatus.cart)
         db.add(db_cart)
         db.commit()
         db.refresh(db_cart)
@@ -29,7 +29,11 @@ def create_order(user_id: int) -> bool:
 
 
 def read_cart_by_user_id(user_id: int) -> list[dict]:
-    stmt = select(Order).where(Order.user_id == user_id).where(Order.status == OrderStatus.cart)
+    stmt = (
+        select(Order)
+        .where(Order.user_id == user_id)
+        .where(Order.status == OrderStatus.cart)
+    )
     with Session() as db:
         cart = db.scalars(stmt).first()
     return OrderSchema.from_orm(cart).__dict__
@@ -60,7 +64,11 @@ def read_order_by_id(id: int) -> dict | None:
 
 
 def read_orders_by_user_id(user_id: int) -> list[dict]:
-    stmt = select(Order).where(Order.user_id == user_id).where(Order.status != OrderStatus.cart)
+    stmt = (
+        select(Order)
+        .where(Order.user_id == user_id)
+        .where(Order.status != OrderStatus.cart)
+    )
     with Session() as db:
         orders = db.scalars(stmt).all()
     return [OrderSchema.from_orm(order).__dict__ for order in orders]

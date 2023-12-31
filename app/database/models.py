@@ -24,8 +24,7 @@ str_256 = Annotated[str, 256]
 
 
 class Base(DeclarativeBase):
-    type_annotation_map = {str_256: String(256),
-                           intpk: BigInteger}
+    type_annotation_map = {str_256: String(256), intpk: BigInteger}
 
     repr_cols_num = 3
     repr_cols = tuple()

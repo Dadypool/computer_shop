@@ -6,6 +6,7 @@ from app.database.models import User
 from app.database.schemas import UserSchema
 from app.database.crud.order import create_cart
 
+
 def create_user(user: dict) -> bool:
     try:
         user = UserSchema(**user)

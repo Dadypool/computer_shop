@@ -23,8 +23,10 @@ class ProductCategory(MyBaseModel):
     price: int = price_constr
     manufacturer: str = str_constr
 
+
 class ProductCreate(ProductCategory):
     category: Category
+
 
 class ProductSchema(ProductCreate):
     id: int

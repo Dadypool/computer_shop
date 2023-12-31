@@ -46,7 +46,11 @@ def read_product_by_category(category: ProductCategory) -> list[dict]:
 
 
 def read_free_product_by_name(name: str) -> dict | None:
-    stmt = select(Product).where(Product.name == name).where(Product.status == ProductStatus.free)
+    stmt = (
+        select(Product)
+        .where(Product.name == name)
+        .where(Product.status == ProductStatus.free)
+    )
     with Session() as db:
         product = db.scalars(stmt).first()
     if not product:
@@ -73,6 +77,7 @@ def update_product_price(product: ProductSchema, new_price: int) -> bool:
             product.price = new_price
         db.commit()
     return True
+
 
 def update_add_product_to_cart(user_id: int, product_id: int) -> bool:
     with Session() as db:
