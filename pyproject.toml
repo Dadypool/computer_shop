@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "computer-shop"
-version = "0.1.0"
+version = "1.0.0"
 description = ""
 authors = ["Dadypool", "wequalwo"]
 readme = "README.md"
